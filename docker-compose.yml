@@ -1,0 +1,31 @@
+version: '3.4'
+
+networks:
+  backend:
+
+services:
+  persondb: 
+    container_name: person-container
+    image: mcr.microsoft.com/mssql/server:2022-latest
+    environment:
+      - ACCEPT_EULA=Y
+      - SA_PASSWORD=Nurmuhammad@2002
+    networks:
+      - backend
+    ports:
+      - 7070:1433
+
+  microservicedemowithdocker:
+    container_name: person-api
+    image: ${DOCKER_REGISTRY-}microservicedemowithdocker
+    build:
+      context: .
+      dockerfile: MicroserviceDemoWithDocker/Dockerfile
+    networks:
+      - backend
+    ports:
+      - 8080:80
+    environment:
+      - DB_HOST=tcustomerdb
+      - DB_NAME=tcustomer
+      - DB_SA_PASSWORD=Nurmuhammad@2002
